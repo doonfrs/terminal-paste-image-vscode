@@ -25,8 +25,12 @@ async function pasteImageFromClipboard() {
         return;
     }
 
+    const config = vscode.workspace.getConfiguration('terminalPasteImage');
+    const folderName = config.get<string>('folderName', '.cp-images');
+    const autoGitIgnore = config.get<boolean>('autoGitIgnore', true);
+
     const workspaceRoot = workspaceFolders[0].uri.fsPath;
-    const imagesDir = path.join(workspaceRoot, '.images');
+    const imagesDir = path.join(workspaceRoot, folderName);
     
     if (!fs.existsSync(imagesDir)) {
         fs.mkdirSync(imagesDir, { recursive: true });
@@ -35,7 +39,7 @@ async function pasteImageFromClipboard() {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('.')[0];
     const imageName = `pasted-image-${timestamp}.png`;
     const imagePath = path.join(imagesDir, imageName);
-    const relativePath = `.images/${imageName}`;
+    const relativePath = `${folderName}/${imageName}`;
 
     const hasImage = await checkClipboardForImage();
     if (!hasImage) {
@@ -44,6 +48,12 @@ async function pasteImageFromClipboard() {
     }
 
     await saveClipboardImage(imagePath);
+    
+    // Handle .gitignore auto-update
+    if (autoGitIgnore) {
+        await updateGitIgnore(workspaceRoot, folderName);
+    }
+    
     await insertPathInTerminal(relativePath);
     
     vscode.window.showInformationMessage(`Image saved and path inserted: ${relativePath}`);
@@ -178,6 +188,45 @@ async function saveClipboardImage(imagePath: string): Promise<void> {
 
     console.log(`Saving image with command: ${command}`);
     await execAsync(command);
+}
+
+async function updateGitIgnore(workspaceRoot: string, folderName: string): Promise<void> {
+    const gitignorePath = path.join(workspaceRoot, '.gitignore');
+    
+    try {
+        // Check if .gitignore exists
+        if (!fs.existsSync(gitignorePath)) {
+            console.log('No .gitignore file found, skipping auto-update');
+            return;
+        }
+
+        // Read .gitignore content
+        const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+        
+        // Check if the folder is already in .gitignore
+        const folderPattern = folderName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex chars
+        const patterns = [
+            new RegExp(`^${folderPattern}/?$`, 'm'),    // Exact match
+            new RegExp(`^${folderPattern}/\\*$`, 'm'),   // With wildcard
+            new RegExp(`^\\*\\*/${folderPattern}/?$`, 'm'), // Recursive match
+        ];
+        
+        const alreadyIgnored = patterns.some(pattern => pattern.test(gitignoreContent));
+        
+        if (!alreadyIgnored) {
+            // Add the folder to .gitignore
+            const newLine = gitignoreContent.endsWith('\n') ? '' : '\n';
+            const updatedContent = `${gitignoreContent}${newLine}\n# Terminal Paste Image folder\n${folderName}/\n`;
+            
+            fs.writeFileSync(gitignorePath, updatedContent, 'utf8');
+            console.log(`Added ${folderName}/ to .gitignore`);
+        } else {
+            console.log(`${folderName} is already in .gitignore`);
+        }
+    } catch (error) {
+        console.error('Error updating .gitignore:', error);
+        // Don't show error to user as this is a convenience feature
+    }
 }
 
 async function insertPathInTerminal(imagePath: string): Promise<void> {

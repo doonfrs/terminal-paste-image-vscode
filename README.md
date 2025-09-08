@@ -17,13 +17,15 @@ If this extension helps you, consider supporting the development:
 - **Zero Configuration Required** - Works out of the box across all platforms
 - **Cross-Platform Support** - Windows, macOS, Linux, and WSL/WSL2 compatible
 - **Smart Clipboard Detection** - Automatically detects when images are in your clipboard
-- **Automatic File Management** - Saves images to `.images/` folder with timestamps
+- **Automatic File Management** - Saves images to configurable folder (default: `.cp-images/`) with timestamps
 - **Instant Path Insertion** - Immediately inserts the relative path into your active terminal
 - **Claude Code Optimized** - Perfect for sharing images with Claude Code AI assistant
 - **WSL Integration** - Seamless PowerShell integration for WSL environments
 - **Keyboard Shortcut** - Quick `Ctrl+Shift+V` (Windows/Linux) or `Cmd+Shift+V` (macOS)
 - **Terminal Focus Aware** - Only activates when terminal is in focus
 - **Multiple Image Formats** - Supports PNG and other common clipboard image formats
+- **Smart Git Integration** - Automatically adds images folder to .gitignore (configurable)
+- **Customizable Folder Name** - Configure where images are saved (default: `.cp-images/`)
 
 ## 📋 Prerequisites
 
@@ -82,7 +84,7 @@ Perfect for sharing screenshots, diagrams, or images with Claude Code AI assista
 1. Copy an image to your clipboard (screenshot, image file, etc.)
 2. Focus on any terminal in VS Code
 3. Press `Ctrl+Shift+V` (Windows/Linux) or `Cmd+Shift+V` (macOS)
-4. The image is saved to `.images/` folder and path is inserted in terminal
+4. The image is saved to your configured folder and path is inserted in terminal
 
 ### Command Palette
 - Open Command Palette (`Ctrl+Shift+P`)
@@ -130,7 +132,7 @@ Images are automatically saved to:
 
 ```text
 your-project/
-├── .images/
+├── .cp-images/
 │   ├── pasted-image-2024-01-15T10-30-45.png
 │   ├── pasted-image-2024-01-15T10-31-02.png
 │   └── ...
@@ -139,7 +141,7 @@ your-project/
 Path format inserted in terminal:
 
 ```text
-.images/pasted-image-2024-01-15T10-30-45.png
+.cp-images/pasted-image-2024-01-15T10-30-45.png
 ```
 
 
@@ -151,6 +153,46 @@ Path format inserted in terminal:
 | macOS | `Cmd+Shift+V` |
 
 **Note**: Shortcuts only work when terminal is focused to avoid conflicts with normal paste operations.
+
+
+## ⚙️ Configuration
+
+The extension provides several configuration options that can be customized in VS Code settings:
+
+### Settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `terminalPasteImage.folderName` | string | `.cp-images` | Name of the folder where pasted images will be saved |
+| `terminalPasteImage.autoGitIgnore` | boolean | `true` | Automatically add the images folder to .gitignore if not present |
+
+### Accessing Settings
+
+1. Open VS Code Settings (`Ctrl+,` or `Cmd+,`)
+2. Search for "Terminal Paste Image"
+3. Modify the settings as needed
+
+### Auto .gitignore Management
+
+By default, the extension will:
+- Check if a `.gitignore` file exists in your workspace
+- Verify if your images folder is already ignored
+- Automatically add the folder to `.gitignore` if not present
+- Add a helpful comment indicating it's for Terminal Paste Image
+
+This behavior can be disabled by setting `terminalPasteImage.autoGitIgnore` to `false`.
+
+### Custom Folder Configuration
+
+You can change the default folder name from `.cp-images` to any folder name you prefer:
+
+```json
+{
+  "terminalPasteImage.folderName": "screenshots"
+}
+```
+
+The folder will be created relative to your workspace root.
 
 
 ## 🤝 Contributing
@@ -174,6 +216,9 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Terminal path insertion
 - WSL/WSL2 support
 - Keyboard shortcut integration
+- Configurable folder name (default: `.cp-images/`)
+- Auto .gitignore management
+- Smart git integration settings
 
 
 ## 🐛 Known Issues

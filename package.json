@@ -37,7 +37,23 @@
         "mac": "cmd+shift+v",
         "when": "terminalFocus"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Terminal Paste Image",
+      "properties": {
+        "terminalPasteImage.folderName": {
+          "type": "string",
+          "default": ".cp-images",
+          "description": "Name of the folder where pasted images will be saved"
+        },
+        "terminalPasteImage.autoGitIgnore": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically add the images folder to .gitignore if it's not already present"
+        }
+      }
+    }
   },
   "scripts": {
     "compile": "tsc -p ./",
