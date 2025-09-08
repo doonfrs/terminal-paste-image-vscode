@@ -1,5 +1,5 @@
 #!/bin/bash
 
-tsc -p ./
+npm run compile
 
 vsce package
