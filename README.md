@@ -26,6 +26,7 @@ If this extension helps you, consider supporting the development:
 - **Multiple Image Formats** - Supports PNG and other common clipboard image formats
 - **Smart Git Integration** - Automatically adds images folder to .gitignore (configurable)
 - **Customizable Folder Name** - Configure where images are saved (default: `.cp-images/`)
+- **Automatic Cleanup** - Keeps only recent images (default: 10) to prevent folder bloat
 
 ## 📋 Prerequisites
 
@@ -165,6 +166,7 @@ The extension provides several configuration options that can be customized in V
 |---------|------|---------|-------------|
 | `terminalPasteImage.folderName` | string | `.cp-images` | Name of the folder where pasted images will be saved |
 | `terminalPasteImage.autoGitIgnore` | boolean | `true` | Automatically add the images folder to .gitignore if not present |
+| `terminalPasteImage.maxImages` | number | `10` | Maximum number of images to keep (older images are automatically deleted) |
 
 ### Accessing Settings
 
@@ -194,6 +196,21 @@ You can change the default folder name from `.cp-images` to any folder name you 
 
 The folder will be created relative to your workspace root.
 
+### Image Management
+
+By default, the extension keeps only the 10 most recent images to prevent folder bloat:
+
+```json
+{
+  "terminalPasteImage.maxImages": 10
+}
+```
+
+- When you paste a new image, older images beyond the limit are automatically deleted
+- Images are sorted by modification time (newest kept, oldest deleted)
+- Only images matching the `pasted-image-*.png` pattern are managed
+- Set to a higher number if you need to keep more images
+- Minimum value is 1, maximum is 100
 
 ## 🤝 Contributing
 
@@ -219,6 +236,8 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Configurable folder name (default: `.cp-images/`)
 - Auto .gitignore management
 - Smart git integration settings
+- Automatic image cleanup (keeps last 10 images by default)
+- Configurable maximum image count (1-100)
 
 
 ## 🐛 Known Issues

@@ -3,6 +3,7 @@
   "displayName": "Terminal Paste Image",
   "description": "Paste clipboard images directly into terminal with automatic path insertion",
   "version": "0.0.1",
+  "icon": "assets/icon.jpg",
   "author": {
     "name": "Feras Abdalrahman",
     "url": "https://marketplace.visualstudio.com/publishers/doonfrs"
@@ -51,6 +52,13 @@
           "type": "boolean",
           "default": true,
           "description": "Automatically add the images folder to .gitignore if it's not already present"
+        },
+        "terminalPasteImage.maxImages": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Maximum number of images to keep in the folder (older images will be automatically deleted)"
         }
       }
     }

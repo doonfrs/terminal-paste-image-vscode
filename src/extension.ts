@@ -28,6 +28,7 @@ async function pasteImageFromClipboard() {
     const config = vscode.workspace.getConfiguration('terminalPasteImage');
     const folderName = config.get<string>('folderName', '.cp-images');
     const autoGitIgnore = config.get<boolean>('autoGitIgnore', true);
+    const maxImages = config.get<number>('maxImages', 10);
 
     const workspaceRoot = workspaceFolders[0].uri.fsPath;
     const imagesDir = path.join(workspaceRoot, folderName);
@@ -53,6 +54,9 @@ async function pasteImageFromClipboard() {
     if (autoGitIgnore) {
         await updateGitIgnore(workspaceRoot, folderName);
     }
+    
+    // Clean up old images
+    await cleanupOldImages(imagesDir, maxImages);
     
     await insertPathInTerminal(relativePath);
     
@@ -226,6 +230,56 @@ async function updateGitIgnore(workspaceRoot: string, folderName: string): Promi
     } catch (error) {
         console.error('Error updating .gitignore:', error);
         // Don't show error to user as this is a convenience feature
+    }
+}
+
+async function cleanupOldImages(imagesDir: string, maxImages: number): Promise<void> {
+    try {
+        if (!fs.existsSync(imagesDir)) {
+            return;
+        }
+
+        // Read all files in the images directory
+        const files = fs.readdirSync(imagesDir);
+        
+        // Filter for image files (assuming they follow the pasted-image-*.png pattern)
+        const imageFiles = files.filter(file => 
+            file.startsWith('pasted-image-') && file.endsWith('.png')
+        );
+
+        if (imageFiles.length <= maxImages) {
+            return; // No cleanup needed
+        }
+
+        // Get file stats and sort by creation time (newest first)
+        const fileStats = imageFiles.map(file => {
+            const filePath = path.join(imagesDir, file);
+            const stats = fs.statSync(filePath);
+            return {
+                name: file,
+                path: filePath,
+                mtime: stats.mtime
+            };
+        }).sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+
+        // Keep only the most recent maxImages files, delete the rest
+        const filesToDelete = fileStats.slice(maxImages);
+        
+        for (const fileInfo of filesToDelete) {
+            try {
+                fs.unlinkSync(fileInfo.path);
+                console.log(`Deleted old image: ${fileInfo.name}`);
+            } catch (deleteError) {
+                console.error(`Failed to delete ${fileInfo.name}:`, deleteError);
+            }
+        }
+
+        if (filesToDelete.length > 0) {
+            console.log(`Cleaned up ${filesToDelete.length} old images, kept ${maxImages} most recent`);
+        }
+    } catch (error) {
+        console.error('Error during image cleanup:', error);
+        // Don't show error to user as this is a maintenance feature
     }
 }
 
