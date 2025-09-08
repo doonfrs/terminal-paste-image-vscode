@@ -7,7 +7,7 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 export function activate(context: vscode.ExtensionContext) {
-    const disposable = vscode.commands.registerCommand('claude-paste-image.pasteImage', async () => {
+    const disposable = vscode.commands.registerCommand('terminal-paste-image.pasteImage', async () => {
         try {
             await pasteImageFromClipboard();
         } catch (error) {

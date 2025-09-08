@@ -1,8 +1,18 @@
 {
-  "name": "claude-paste-image-ext",
-  "displayName": "Claude Paste Image Extension",
-  "description": "Paste clipboard images and insert paths for Claude Code",
+  "name": "terminal-paste-image-vscode",
+  "displayName": "Terminal Paste Image",
+  "description": "Paste clipboard images directly into terminal with automatic path insertion",
   "version": "0.0.1",
+  "author": {
+    "name": "Feras Abdalrahman",
+    "url": "https://marketplace.visualstudio.com/publishers/doonfrs"
+  },
+  "publisher": "doonfrs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doonfrs/terminal-paste-image-vscode"
+  },
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -10,19 +20,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:claude-paste-image.pasteImage"
+    "onCommand:terminal-paste-image.pasteImage"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "claude-paste-image.pasteImage",
-        "title": "Paste Image for Claude Code"
+        "command": "terminal-paste-image.pasteImage",
+        "title": "Paste Image to Terminal"
       }
     ],
     "keybindings": [
       {
-        "command": "claude-paste-image.pasteImage",
+        "command": "terminal-paste-image.pasteImage",
         "key": "ctrl+shift+v",
         "mac": "cmd+shift+v",
         "when": "terminalFocus"
