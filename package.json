@@ -34,8 +34,8 @@
     "keybindings": [
       {
         "command": "terminal-paste-image.pasteImage",
-        "key": "ctrl+shift+v",
-        "mac": "cmd+shift+v",
+        "key": "ctrl+alt+v",
+        "mac": "cmd+alt+v",
         "when": "terminalFocus"
       }
     ],

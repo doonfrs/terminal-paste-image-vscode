@@ -21,7 +21,7 @@ If this extension helps you, consider supporting the development:
 - **Instant Path Insertion** - Immediately inserts the relative path into your active terminal
 - **Claude Code Optimized** - Perfect for sharing images with Claude Code AI assistant
 - **WSL Integration** - Seamless PowerShell integration for WSL environments
-- **Keyboard Shortcut** - Quick `Ctrl+Shift+V` (Windows/Linux) or `Cmd+Shift+V` (macOS)
+- **Keyboard Shortcut** - Quick `Ctrl+Alt+V` (Windows/Linux) or `Cmd+Alt+V` (macOS)
 - **Terminal Focus Aware** - Only activates when terminal is in focus
 - **Multiple Image Formats** - Supports PNG and other common clipboard image formats
 - **Smart Git Integration** - Automatically adds images folder to .gitignore (configurable)
@@ -49,7 +49,7 @@ If you find this extension useful:
 ### Claude Code Integration
 Perfect for sharing screenshots, diagrams, or images with Claude Code AI assistant:
 1. Copy any image to clipboard (screenshot, design, diagram)
-2. Press `Ctrl+Shift+V` in terminal
+2. Press `Ctrl+Alt+V` in terminal
 3. Image path is automatically inserted for Claude Code to reference
 
 ### General Development
@@ -84,7 +84,7 @@ Perfect for sharing screenshots, diagrams, or images with Claude Code AI assista
 ### Basic Usage
 1. Copy an image to your clipboard (screenshot, image file, etc.)
 2. Focus on any terminal in VS Code
-3. Press `Ctrl+Shift+V` (Windows/Linux) or `Cmd+Shift+V` (macOS)
+3. Press `Ctrl+Alt+V` (Windows/Linux) or `Cmd+Alt+V` (macOS)
 4. The image is saved to your configured folder and path is inserted in terminal
 
 ### Command Palette
@@ -150,8 +150,8 @@ Path format inserted in terminal:
 
 | Platform | Shortcut |
 |----------|----------|
-| Windows/Linux | `Ctrl+Shift+V` |
-| macOS | `Cmd+Shift+V` |
+| Windows/Linux | `Ctrl+Alt+V` |
+| macOS | `Cmd+Alt+V` |
 
 **Note**: Shortcuts only work when terminal is focused to avoid conflicts with normal paste operations.
 
