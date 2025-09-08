@@ -4,6 +4,8 @@
 
 A VS Code extension that seamlessly pastes clipboard images directly into your terminal, automatically saving them to your project and inserting the file path. Perfect for Claude Code users and any workflow that requires quick image sharing in terminal environments.
 
+**⭐ If this extension saves you time and makes your workflow smoother, please consider starring the repository! Your support means the world to us and helps the project grow. ⭐**
+
 ## ☕ Support
 
 If this extension helps you, consider supporting the development:
