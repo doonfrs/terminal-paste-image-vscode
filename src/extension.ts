@@ -220,7 +220,7 @@ async function updateGitIgnore(workspaceRoot: string, folderName: string): Promi
         if (!alreadyIgnored) {
             // Add the folder to .gitignore
             const newLine = gitignoreContent.endsWith('\n') ? '' : '\n';
-            const updatedContent = `${gitignoreContent}${newLine}\n# Terminal Paste Image folder\n${folderName}/\n`;
+            const updatedContent = `${gitignoreContent}${newLine}\n# Terminal Paste Image folder\n/${folderName}\n`;
             
             fs.writeFileSync(gitignorePath, updatedContent, 'utf8');
             console.log(`Added ${folderName}/ to .gitignore`);
