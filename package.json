@@ -59,6 +59,16 @@
           "minimum": 1,
           "maximum": 100,
           "description": "Maximum number of images to keep in the folder (older images will be automatically deleted)"
+        },
+        "terminalPasteImage.pathFormat": {
+          "type": "string",
+          "default": "relative",
+          "enum": ["relative", "absolute"],
+          "enumDescriptions": [
+            "Use relative path from workspace root (e.g., .cp-images/image.png)",
+            "Use absolute file system path (e.g., /home/user/project/.cp-images/image.png)"
+          ],
+          "description": "Format of the image path inserted into the terminal"
         }
       }
     }

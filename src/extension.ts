@@ -29,6 +29,7 @@ async function pasteImageFromClipboard() {
     const folderName = config.get<string>('folderName', '.cp-images');
     const autoGitIgnore = config.get<boolean>('autoGitIgnore', true);
     const maxImages = config.get<number>('maxImages', 10);
+    const pathFormat = config.get<string>('pathFormat', 'relative');
 
     const workspaceRoot = workspaceFolders[0].uri.fsPath;
     const imagesDir = path.join(workspaceRoot, folderName);
@@ -41,6 +42,7 @@ async function pasteImageFromClipboard() {
     const imageName = `pasted-image-${timestamp}.png`;
     const imagePath = path.join(imagesDir, imageName);
     const relativePath = `${folderName}/${imageName}`;
+    const terminalPath = pathFormat === 'absolute' ? imagePath : relativePath;
 
     const hasImage = await checkClipboardForImage();
     if (!hasImage) {
@@ -58,9 +60,9 @@ async function pasteImageFromClipboard() {
     // Clean up old images
     await cleanupOldImages(imagesDir, maxImages);
     
-    await insertPathInTerminal(relativePath);
-    
-    vscode.window.showInformationMessage(`Image saved and path inserted: ${relativePath}`);
+    await insertPathInTerminal(terminalPath);
+
+    vscode.window.showInformationMessage(`Image saved and path inserted: ${terminalPath}`);
 }
 
 async function isWSL(): Promise<boolean> {

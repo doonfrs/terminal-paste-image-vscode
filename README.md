@@ -169,6 +169,7 @@ The extension provides several configuration options that can be customized in V
 | `terminalPasteImage.folderName` | string | `.cp-images` | Name of the folder where pasted images will be saved |
 | `terminalPasteImage.autoGitIgnore` | boolean | `true` | Automatically add the images folder to .gitignore if not present |
 | `terminalPasteImage.maxImages` | number | `10` | Maximum number of images to keep (older images are automatically deleted) |
+| `terminalPasteImage.pathFormat` | string | `relative` | Format of the image path inserted into terminal (`relative` or `absolute`) |
 
 ### Accessing Settings
 
@@ -197,6 +198,21 @@ You can change the default folder name from `.cp-images` to any folder name you 
 ```
 
 The folder will be created relative to your workspace root.
+
+### Path Format Configuration
+
+You can choose between relative and absolute paths for the terminal output:
+
+```json
+{
+  "terminalPasteImage.pathFormat": "relative"
+}
+```
+
+- **`relative`** (default): Inserts path relative to workspace root (e.g., `.cp-images/pasted-image-2024-01-15T10-30-45.png`)
+- **`absolute`**: Inserts full file system path (e.g., `/home/user/project/.cp-images/pasted-image-2024-01-15T10-30-45.png`)
+
+Use `absolute` when you need the full path for tools that don't run from the workspace root, or when sharing paths across different terminal sessions.
 
 ### Image Management
 
@@ -227,6 +243,9 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 
 ## 📝 Changelog
+
+### v0.0.2
+- Added `pathFormat` setting to choose between relative and absolute paths
 
 ### v0.0.1
 - Initial release
