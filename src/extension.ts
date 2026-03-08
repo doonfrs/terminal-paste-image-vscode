@@ -194,39 +194,39 @@ async function saveClipboardImage(imagePath: string): Promise<void> {
     await execAsync(command);
 }
 
+async function isIgnoredByGit(workspaceRoot: string, folderName: string): Promise<boolean> {
+    try {
+        // git check-ignore respects all ignore sources: .gitignore, global gitignore, .git/info/exclude
+        await execAsync(`git check-ignore -q "${folderName}"`, { cwd: workspaceRoot });
+        return true; // exit code 0 means it's ignored
+    } catch {
+        return false; // exit code 1 means it's not ignored
+    }
+}
+
 async function updateGitIgnore(workspaceRoot: string, folderName: string): Promise<void> {
     const gitignorePath = path.join(workspaceRoot, '.gitignore');
-    
+
     try {
+        // Check if already ignored by any gitignore source (repo, global, .git/info/exclude)
+        if (await isIgnoredByGit(workspaceRoot, folderName)) {
+            console.log(`${folderName} is already ignored by git`);
+            return;
+        }
+
         // Check if .gitignore exists
         if (!fs.existsSync(gitignorePath)) {
             console.log('No .gitignore file found, skipping auto-update');
             return;
         }
 
-        // Read .gitignore content
+        // Add the folder to .gitignore
         const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
-        
-        // Check if the folder is already in .gitignore
-        const folderPattern = folderName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex chars
-        const patterns = [
-            new RegExp(`^${folderPattern}/?$`, 'm'),    // Exact match
-            new RegExp(`^${folderPattern}/\\*$`, 'm'),   // With wildcard
-            new RegExp(`^\\*\\*/${folderPattern}/?$`, 'm'), // Recursive match
-        ];
-        
-        const alreadyIgnored = patterns.some(pattern => pattern.test(gitignoreContent));
-        
-        if (!alreadyIgnored) {
-            // Add the folder to .gitignore
-            const newLine = gitignoreContent.endsWith('\n') ? '' : '\n';
-            const updatedContent = `${gitignoreContent}${newLine}\n# Terminal Paste Image folder\n/${folderName}\n`;
-            
-            fs.writeFileSync(gitignorePath, updatedContent, 'utf8');
-            console.log(`Added ${folderName}/ to .gitignore`);
-        } else {
-            console.log(`${folderName} is already in .gitignore`);
-        }
+        const newLine = gitignoreContent.endsWith('\n') ? '' : '\n';
+        const updatedContent = `${gitignoreContent}${newLine}\n# Terminal Paste Image folder\n/${folderName}\n`;
+
+        fs.writeFileSync(gitignorePath, updatedContent, 'utf8');
+        console.log(`Added ${folderName}/ to .gitignore`);
     } catch (error) {
         console.error('Error updating .gitignore:', error);
         // Don't show error to user as this is a convenience feature
